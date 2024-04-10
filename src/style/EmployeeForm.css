@@ -1,0 +1,68 @@
+/* App.css */
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .form-container label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .form-container input[type="text"],
+  .form-container input[type="number"],
+  .form-container input[type="date"],
+  .form-container select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+  }
+  
+  .form-container input[type="radio"] {
+    margin-right: 5px;
+  }
+  
+  .form-container button {
+    background-color:#0056b3;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .form-container button[type="button"] {
+    background-color: #c11a1a;
+  }
+  
+  .form-container button[type="submit"] {
+    background-color: #4caf50;
+  }
+  
+  .form-container button:hover {
+    opacity: 0.8;
+  }
+  
+  .form-container .role-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-container .role-container select {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .form-container .role-container input[type="date"] {
+    flex: 1;
+    margin-right: 10px;
+  }
+  

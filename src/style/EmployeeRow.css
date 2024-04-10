@@ -1,0 +1,27 @@
+.employee-row-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .employee-row-buttons button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .employee-row-buttons button.delete-button {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .employee-row-buttons button.update-button {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .employee-row-buttons button:hover {
+    opacity: 0.8;
+  }
+  

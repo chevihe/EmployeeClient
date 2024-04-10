@@ -1,0 +1,57 @@
+.employee-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .employee-list-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .employee-list-search input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .employee-list-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .employee-list-table th,
+  .employee-list-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .employee-list-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .employee-list-table td {
+    text-align: center;
+  }
+  
+  .employee-list-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .employee-list-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .employee-list-buttons button:hover {
+    background-color: #0056b3;
+  }
+  
