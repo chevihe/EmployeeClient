@@ -4,6 +4,9 @@ import '../style/EmployeeRow.css';
 function EmployeeRow({ employee, onDelete, onUpdate }) {
   const handleDelete = () => {
     onDelete(employee.id);
+    console.log("-----------------------------");
+    console.log(employee);
+
   };
 
   const handleUpdate = () => {

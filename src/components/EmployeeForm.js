@@ -12,7 +12,7 @@ import {onUpdate,onAdd} from'./service.js'
 const schema = yup.object({
   FirstName: yup.string().required(),
   LastName: yup.string().required(),
-  Identity: yup.string().required(),
+  Identity: yup.string().matches(/^[0-9]{9}$/, 'Identity must be exactly 9 digits').required(),
   StartJobDate: yup.date().required(),
   Gender: yup.number().notRequired(),
   BirthDate: yup.date().required(),
@@ -21,10 +21,10 @@ const schema = yup.object({
 function EmployeeForm({employeeEdit1,Update}) {
   const [rolesA, setRoles] = useState([]);
   const navigate = useNavigate();
-  const [employeeRoles, setEmployeeRoles] = useState([{ RoleId: 0, IsAdministrative: '', StartDate: Date.now }]); // New state for roles
+  const [employeeRoles, setEmployeeRoles] = useState([]);
   const { setValue } = useForm();
   const [ref, setRef] = useState();
-  let gender=0;
+  
 
   useEffect(() => {
     axios.get("https://localhost:7237/api/Role").then((response) =>
@@ -36,12 +36,9 @@ function EmployeeForm({employeeEdit1,Update}) {
       if(employeeEdit1){
       setEmployeeRoles(employeeEdit1.employee.roles.map((role) => ({
         roleID: role.roleID,
-        isManager: role.isManagement,
         startRoleDate: role.startRoleDate,
       })));
-      
     }
-    
   }, [employeeEdit1]);
 
   const {
@@ -52,21 +49,21 @@ function EmployeeForm({employeeEdit1,Update}) {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      EmployeeRoles: [], // Updated default values
+      employeeRoles: [], 
     },
   });
-  const handleChange = (dataGender) => {
-    gender=dataGender;
-  };
 
   const handleAddRole = () => {
-    setEmployeeRoles([...employeeRoles, { roleID: 0, isManager: false, startRoleDate: "" }]);
+    setEmployeeRoles([...employeeRoles, { roleID: 1, startRoleDate: "" }]);
+  };
+
+  const handleRemoveRole = (index) => {
+    setEmployeeRoles(employeeRoles.filter((role, i) => i !== index));
   };
   const onSubmit = async (data, event) => {
-   data.Gender=gender;
    if (employeeEdit1) {
     try {
-      await onUpdate(employeeEdit1.employee.id, data, employeeRoles);
+      await onUpdate(employeeEdit1.employee.id, data);
       Update(); 
     } catch (error) {
       console.error("Error updating employee:", error);
@@ -74,7 +71,7 @@ function EmployeeForm({employeeEdit1,Update}) {
 
     else{
       try {
-        await onAdd(data,employeeRoles,event);
+        await onAdd(data,event);
      navigate(-1);
       }catch (error) {
         console.error("Error updating employee:", error);
@@ -88,43 +85,46 @@ function EmployeeForm({employeeEdit1,Update}) {
       <TextField {...register("LastName")} defaultValue={employeeEdit1?employeeEdit1.employee.lastName:''} label="Last Name" variant="outlined" fullWidth margin="normal" error={!!errors.LastName} helperText={errors.LastName?.message} />
       <TextField {...register("Identity")} defaultValue={employeeEdit1?employeeEdit1.employee.tz:''} label="Identity" variant="outlined" fullWidth margin="normal" error={!!errors.Identity} helperText={errors.Identity?.message} />
       <TextField {...register("StartJobDate")} defaultValue={dayjs(employeeEdit1?employeeEdit1.employee.startWorkDate:"").format('YYYY-MM-DD')} label="Start Job Date" type="date" variant="outlined" fullWidth margin="normal" error={!!errors.StartJobDate} helperText={errors.StartJobDate?.message} />
-      <FormControl  margin="normal">
-        <FormLabel component="legend">Gender</FormLabel>
-        <RadioGroup>
-          <FormControlLabel value={1} onChange={handleChange(1)} control={<Radio />} label="Male" />
-          <FormControlLabel value={2} onChange={handleChange(2)} control={<Radio />} label="Female" />
-        </RadioGroup>
-      </FormControl>
+     
+      <Select
+            {...register(`Gender`)}
+            defaultValue={employeeEdit1 ?employeeEdit1.employee.gender:0} 
+            variant="outlined"
+            fullWidth
+            required
+            label="Gender"
+          >
+              <MenuItem key={0} value={0}>
+                זכר
+              </MenuItem>
+              <MenuItem key={1} value={1}>
+               נקבה 
+              </MenuItem>
+          </Select>
+
       <TextField {...register("BirthDate")} defaultValue={dayjs(employeeEdit1?employeeEdit1.employee.birthDate:"").format('YYYY-MM-DD')} label="Birth Date" type="date" variant="outlined" fullWidth margin="normal" error={!!errors.BirthDate} helperText={errors.BirthDate?.message} />
 
       <h2>Roles</h2>
       {employeeRoles.map((role, index) => (
         <div className="role-container" key={index}>
           <Select
-           id="outlined-required"
-            {...register(`EmployeeRoles[${index}].roleID`)}
-            defaultValue={role.roleID ? role.roleID : 1} // Set default value for each role
+           id="required"
+            {...register(`employeeRoles[${index}].roleID`)}
+            defaultValue={role.roleID ? role.roleID : 1} 
             variant="outlined"
             fullWidth
             required
             label="Role"
           >
             {rolesA.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
+              <MenuItem key={option.roleID} value={option.roleID}>
                 {option.name}
               </MenuItem>
             ))}
           </Select>
-          <FormControl component="fieldset" margin="normal">
-            <FormLabel component="legend">Is Manager</FormLabel>
-            <RadioGroup  defaultValue={role.isManager?role.isManager:false} {...register(`EmployeeRoles[${index}].isManager`)}>
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
-            </RadioGroup>
-          </FormControl>
 
-          <TextField {...register(`EmployeeRoles[${index}].startRoleDate`)} defaultValue={dayjs(role.startRoleDate).format('YYYY-MM-DD')} label="Start Date" type="date" variant="outlined" />
-          <Button type="button" onClick={() => setEmployeeRoles(employeeRoles.filter((_, i) => i !== index))} variant="contained" color="error">
+          <TextField {...register(`employeeRoles[${index}].startRoleDate`)} defaultValue={dayjs(role.startRoleDate).format('YYYY-MM-DD')} label="Start Date" type="date" variant="outlined" />
+          <Button type="button" onClick={() => handleRemoveRole(index)} variant="contained" color="error">
             Remove Role
           </Button>
         </div>
